@@ -30,8 +30,4 @@
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 
-# Sistema
-.DS_Store
-Thumbs.db
