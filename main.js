@@ -207,14 +207,19 @@ class EscenaSimpson {
     
     // Cuerpo principal de la casa
     const geometriaCasa = this.obtenerGeometria('casa', () => new THREE.BoxGeometry(15, 10, 10));
+    const geomatriaCoplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10,10, 6));
     const materialCasa = this.obtenerMaterial('casa', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.paredCasa })
     );
     
+    const casaBase = new THREE.Mesh(geomatriaCoplemento, materialCasa);
     const casa = new THREE.Mesh(geometriaCasa, materialCasa);
     casa.castShadow = true;
+    casaBase.castShadow = true;
+    casaBase.receiveShadow = true;
     casa.receiveShadow = true;
     grupoCasa.add(casa);
+    grupoCasa.add(casaBase);
 
     // Techo de la casa
     const geometriaTecho = this.obtenerGeometria('techo', () => new THREE.ConeGeometry(11.9, 5, 4));
@@ -235,7 +240,8 @@ class EscenaSimpson {
     this.anadirPuerta(grupoCasa);
 
     // Posicionar la casa completa
-    grupoCasa.position.set(7, 5, 9);
+    casaBase.position.set(-10,0,2);
+    grupoCasa.position.set(6, 5, 9);
     this.escena.add(grupoCasa);
     this.objetos.visibles.push(grupoCasa);
   }
@@ -275,9 +281,9 @@ class EscenaSimpson {
   crearArboles() {
     // Posiciones para varios árboles
     const posicionesArboles = [
-      { x: 10, y: 0, z: 0 },
-      { x: 15, y: 0, z: 7 },
-      { x: 8, y: 0, z: -7 }
+      { x: 20, y: 0, z: 0 },
+      { x: -21, y: 0, z: 7 },
+      { x: -20, y: 0, z: -7 }
     ];
     
     posicionesArboles.forEach(pos => {
