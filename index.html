@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patio 3D - Los Simpson</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patio Simpson en 3D</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-  <div id="canvas-container"></div>
-  
-  <script type="module" src="main.js"></script>
+    <div id="canvas-container"></div>
+    <div class="info">
+        <h2>Patio Simpson 3D</h2>
+        <p>Haz clic y arrastra para girar la vista</p>
+        <p>Usa la rueda del ratón para acercar/alejar</p>
+    </div>
+    
+    <!-- Usar el tipo de módulo para habilitar las importaciones ES6 -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>
