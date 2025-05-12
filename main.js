@@ -1,11 +1,11 @@
 // Importaciones (usamos solo UNPKG correctamente)
-// import * as THREE from 'three';
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
- import { rotate } from 'three/tsl';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { rotate } from 'three/tsl';
 // Función para crear la escena básica
-// Importaciones - usando CDN para compatibilidad en navegadores
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/OrbitControls.js';
+
+// import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+// import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/OrbitControls.js';
 
 // Clases y configuración principal
 class EscenaSimpson {
@@ -213,18 +213,22 @@ class EscenaSimpson {
     
     // Cuerpo principal de la casa
     const geometriaCasa = this.obtenerGeometria('casa', () => new THREE.BoxGeometry(15, 10, 10));
-    const geomatriaCoplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10, 10, 6));
+    const geomatriaCoplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10,10, 6));
     const materialCasa = this.obtenerMaterial('casa', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.paredCasa })
     );
     
-    const casaBase = new THREE.Mesh(geomatriaCoplemento, materialCasa);
     const casa = new THREE.Mesh(geometriaCasa, materialCasa);
+    casa.position.set(0, 0, 0); // Posición relativa al grupo
     casa.castShadow = true;
-    casaBase.castShadow = true;
-    casaBase.receiveShadow = true;
     casa.receiveShadow = true;
     grupoCasa.add(casa);
+    
+    // Complemento de la casa
+    const casaBase = new THREE.Mesh(geometriaComplemento, materialCasa);
+    casaBase.position.set(-10, 0, 0); // Posición relativa al grupo
+    casaBase.castShadow = true;
+    casaBase.receiveShadow = true;
     grupoCasa.add(casaBase);
 
     // Techo de la casa
@@ -234,7 +238,7 @@ class EscenaSimpson {
     );
     
     const techo = new THREE.Mesh(geometriaTecho, materialTecho);
-    techo.position.y = 7;
+    techo.position.y = 7.5; // Ajustado para situar correctamente sobre la casa
     techo.rotation.y = Math.PI / 4;
     techo.castShadow = true;
     grupoCasa.add(techo);
@@ -246,7 +250,7 @@ class EscenaSimpson {
     this.anadirPuerta(grupoCasa);
 
     // Posicionar la casa completa
-    casaBase.position.set(-10, 0, 2);
+    casaBase.position.set(-10,0,2);
     grupoCasa.position.set(6, 5, 9);
     this.escena.add(grupoCasa);
     this.objetos.visibles.push(grupoCasa);
@@ -261,13 +265,13 @@ class EscenaSimpson {
     // Ventana frontal
     const geometriaVentanaFrontal = this.obtenerGeometria('ventanaFrontal', () => new THREE.BoxGeometry(2, 2, 0.1));
     const ventanaFrontal = new THREE.Mesh(geometriaVentanaFrontal, materialVentana);
-    ventanaFrontal.position.set(0, 1, 4.01);
+    ventanaFrontal.position.set(0, 1, 5.01); // Ajustado para estar en la superficie
     grupoCasa.add(ventanaFrontal);
     
     // Ventana lateral
     const geometriaVentanaLateral = this.obtenerGeometria('ventanaLateral', () => new THREE.BoxGeometry(0.1, 2, 2));
     const ventanaLateral = new THREE.Mesh(geometriaVentanaLateral, materialVentana);
-    ventanaLateral.position.set(6.01, 1, 0);
+    ventanaLateral.position.set(7.51, 1, 0); // Ajustado para estar en la superficie
     grupoCasa.add(ventanaLateral);
   }
 
@@ -280,7 +284,7 @@ class EscenaSimpson {
     // Puerta
     const geometriaPuerta = this.obtenerGeometria('puerta', () => new THREE.BoxGeometry(2, 4, 0.1));
     const puerta = new THREE.Mesh(geometriaPuerta, materialPuerta);
-    puerta.position.set(-3, -1, 4.01);
+    puerta.position.set(-3, -1, 5.01); // Ajustado para estar en la superficie
     grupoCasa.add(puerta);
   }
 
@@ -504,4 +508,5 @@ class EscenaSimpson {
 // Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
   const patioSimpson = new EscenaSimpson();
-});
+});</parameter>
+</invoke>
