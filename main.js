@@ -1,11 +1,7 @@
-// Importaciones (usamos solo UNPKG correctamente)
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { rotate } from 'three/tsl';
-// Función para crear la escena básica
-
-// import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-// import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/OrbitControls.js';
+// Eliminada la importación incorrecta: import { rotate } from 'three/tsl';
 
 // Clases y configuración principal
 class EscenaSimpson {
@@ -162,15 +158,14 @@ class EscenaSimpson {
       new THREE.MeshLambertMaterial({ color: this.colores.cerca })
     );
 
-  // Valla derecha (alineada en eje Z)
-    
-  const cercaDerecha = new THREE.Mesh(geometriaCercaderecha, materialCerca);
-  cercaDerecha.rotation.y = Math.PI / 2; // Rota 90 grados para que esté de lado
-  cercaDerecha.position.set(25, 1.5, 0); // Ajusta la posición al borde derecho
-  cercaDerecha.castShadow = true;
-  cercaDerecha.receiveShadow = true;
-  this.escena.add(cercaDerecha);
-  this.objetos.visibles.push(cercaDerecha);
+    // Valla derecha (alineada en eje Z)
+    const cercaDerecha = new THREE.Mesh(geometriaCercaderecha, materialCerca);
+    cercaDerecha.rotation.y = Math.PI / 2; // Rota 90 grados para que esté de lado
+    cercaDerecha.position.set(25, 1.5, 0); // Ajusta la posición al borde derecho
+    cercaDerecha.castShadow = true;
+    cercaDerecha.receiveShadow = true;
+    this.escena.add(cercaDerecha);
+    this.objetos.visibles.push(cercaDerecha);
 
     // Valla izquierda
     const cercaIzquierda = new THREE.Mesh(geometriaCercaderecha, materialCerca);
@@ -181,9 +176,7 @@ class EscenaSimpson {
     this.escena.add(cercaIzquierda);
     this.objetos.visibles.push(cercaIzquierda);
 
-
-
-// Valla trasera
+    // Valla trasera
     const cerca = new THREE.Mesh(geometriaCerca, materialCerca);
     cerca.position.set(0, 1.5, -15);
     cerca.castShadow = true;
@@ -191,14 +184,13 @@ class EscenaSimpson {
     this.escena.add(cerca);
     this.objetos.visibles.push(cerca);
 
-//ay que clonar la vayya trasera tambn
+    // Valla delantera
     const cerca2 = new THREE.Mesh(geometriaCerca, materialCerca);
     cerca2.position.set(0, 1.5, 15);
     cerca2.castShadow = true;
     cerca2.receiveShadow = true;
     this.escena.add(cerca2);
     this.objetos.visibles.push(cerca2);
-
   }
 
   crearCasa() {
@@ -207,18 +199,22 @@ class EscenaSimpson {
     
     // Cuerpo principal de la casa
     const geometriaCasa = this.obtenerGeometria('casa', () => new THREE.BoxGeometry(15, 10, 10));
-    const geomatriaCoplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10,10, 6));
+    const geometriaComplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10, 10, 6));
     const materialCasa = this.obtenerMaterial('casa', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.paredCasa })
     );
     
-    const casaBase = new THREE.Mesh(geomatriaCoplemento, materialCasa);
     const casa = new THREE.Mesh(geometriaCasa, materialCasa);
+    casa.position.set(0, 0, 0); // Posición relativa al grupo
     casa.castShadow = true;
-    casaBase.castShadow = true;
-    casaBase.receiveShadow = true;
     casa.receiveShadow = true;
     grupoCasa.add(casa);
+    
+    // Complemento de la casa
+    const casaBase = new THREE.Mesh(geometriaComplemento, materialCasa);
+    casaBase.position.set(-10, 0, 0); // Posición relativa al grupo
+    casaBase.castShadow = true;
+    casaBase.receiveShadow = true;
     grupoCasa.add(casaBase);
 
     // Techo de la casa
@@ -228,7 +224,7 @@ class EscenaSimpson {
     );
     
     const techo = new THREE.Mesh(geometriaTecho, materialTecho);
-    techo.position.y = 7;
+    techo.position.y = 7.5; // Ajustado para situar correctamente sobre la casa
     techo.rotation.y = Math.PI / 4;
     techo.castShadow = true;
     grupoCasa.add(techo);
@@ -240,8 +236,7 @@ class EscenaSimpson {
     this.anadirPuerta(grupoCasa);
 
     // Posicionar la casa completa
-    casaBase.position.set(-10,0,2);
-    grupoCasa.position.set(6, 5, 9);
+    grupoCasa.position.set(0, 5, 0); // Posicionamiento central ajustado
     this.escena.add(grupoCasa);
     this.objetos.visibles.push(grupoCasa);
   }
@@ -255,13 +250,13 @@ class EscenaSimpson {
     // Ventana frontal
     const geometriaVentanaFrontal = this.obtenerGeometria('ventanaFrontal', () => new THREE.BoxGeometry(2, 2, 0.1));
     const ventanaFrontal = new THREE.Mesh(geometriaVentanaFrontal, materialVentana);
-    ventanaFrontal.position.set(0, 1, 4.01);
+    ventanaFrontal.position.set(0, 1, 5.01); // Ajustado para estar en la superficie
     grupoCasa.add(ventanaFrontal);
     
     // Ventana lateral
     const geometriaVentanaLateral = this.obtenerGeometria('ventanaLateral', () => new THREE.BoxGeometry(0.1, 2, 2));
     const ventanaLateral = new THREE.Mesh(geometriaVentanaLateral, materialVentana);
-    ventanaLateral.position.set(6.01, 1, 0);
+    ventanaLateral.position.set(7.51, 1, 0); // Ajustado para estar en la superficie
     grupoCasa.add(ventanaLateral);
   }
 
@@ -274,7 +269,7 @@ class EscenaSimpson {
     // Puerta
     const geometriaPuerta = this.obtenerGeometria('puerta', () => new THREE.BoxGeometry(2, 4, 0.1));
     const puerta = new THREE.Mesh(geometriaPuerta, materialPuerta);
-    puerta.position.set(-3, -1, 4.01);
+    puerta.position.set(-3, -1, 5.01); // Ajustado para estar en la superficie
     grupoCasa.add(puerta);
   }
 
@@ -476,7 +471,6 @@ class EscenaSimpson {
   }
 
   animar() {
-
     requestAnimationFrame(this.animar.bind(this));
     
     // Elegir un tipo de movimiento de cámara (comentar uno u otro para cambiar)
@@ -499,4 +493,5 @@ class EscenaSimpson {
 // Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
   const patioSimpson = new EscenaSimpson();
-});
+});</parameter>
+</invoke>
