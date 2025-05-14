@@ -227,16 +227,22 @@ class EscenaSimpson {
     grupoCasa.add(casaBase);
 
     // Techo de la casa
+    const geometriaTechomini = this.obtenerGeometria('techo', () => new THREE.ConeGeometry(7.9, 4, 3));
+
     const geometriaTecho = this.obtenerGeometria('techo', () => new THREE.ConeGeometry(11.9, 5, 4));
     const materialTecho = this.obtenerMaterial('techo', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.techo })
     );
     
+    const techomini = new THREE.Mesh(geometriaTechomini, materialTecho);
     const techo = new THREE.Mesh(geometriaTecho, materialTecho);
     techo.position.y = 7.5; // Ajustado para situar correctamente sobre la casa
     techo.rotation.y = Math.PI / 4;
+    techomini.position.y = 8.5;
+    techomini.rotation.y = Math.PI / 4;
     techo.castShadow = true;
-    grupoCasa.add(techo);
+    techomini.castShadow = true;
+    grupoCasa.add(techo,techomini);
 
     // Añadir ventanas
     this.anadirVentanas(grupoCasa);
