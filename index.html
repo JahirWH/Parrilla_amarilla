@@ -3,41 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patio Simpson en 3D</title>
+    <title>Escena Simpson 3D</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
             overflow: hidden;
         }
         #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+            position: absolute;
             width: 100%;
             height: 100%;
         }
-        .info {
-            position: absolute;
-            top: 10px;
+        /* Agregar estilo para mensajes de información */
+        .info-panel {
+            position: fixed;
+            bottom: 10px;
             left: 10px;
-            background: rgba(255, 255, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
             padding: 10px;
             border-radius: 5px;
             font-family: Arial, sans-serif;
-            pointer-events: none;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
-    <div class="info">
-        <h2>Patio Simpson 3D</h2>
-        <p>Haz clic y arrastra para girar la vista</p>
-        <p>Usa la rueda del ratón para acercar/alejar</p>
+    <div class="info-panel">
+        <h3>Escena Simpson 3D</h3>
+        <p>Usa el ratón para mover la cámara (click y arrastrar).</p>
+        <p>Rueda del ratón para hacer zoom.</p>
     </div>
-    
-    <!-- Usar el tipo de módulo para habilitar las importaciones ES6 -->
+
+    <!-- Importamos Three.js desde CDN -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/"
+        }
+    }
+    </script>
+    <!-- Nuestro código de la aplicación -->
     <script type="module" src="main.js"></script>
 </body>
 </html>

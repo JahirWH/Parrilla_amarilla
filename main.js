@@ -1,11 +1,6 @@
 // Importaciones (usamos solo UNPKG correctamente)
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { rotate } from 'three/tsl';
-// Función para crear la escena básica
-
-// import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-// import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // Clases y configuración principal
 class EscenaSimpson {
@@ -213,7 +208,7 @@ class EscenaSimpson {
     
     // Cuerpo principal de la casa
     const geometriaCasa = this.obtenerGeometria('casa', () => new THREE.BoxGeometry(15, 10, 10));
-    const geomatriaCoplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10,10, 6));
+    const geometriaCoplemento = this.obtenerGeometria('casaBase', () => new THREE.BoxGeometry(10, 10, 6));
     const materialCasa = this.obtenerMaterial('casa', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.paredCasa })
     );
@@ -225,8 +220,8 @@ class EscenaSimpson {
     grupoCasa.add(casa);
     
     // Complemento de la casa
-    const casaBase = new THREE.Mesh(geometriaComplemento, materialCasa);
-    casaBase.position.set(-10, 0, 0); // Posición relativa al grupo
+    const casaBase = new THREE.Mesh(geometriaCoplemento, materialCasa);
+    casaBase.position.set(-10, 0, 2); // Posición relativa al grupo
     casaBase.castShadow = true;
     casaBase.receiveShadow = true;
     grupoCasa.add(casaBase);
@@ -250,7 +245,6 @@ class EscenaSimpson {
     this.anadirPuerta(grupoCasa);
 
     // Posicionar la casa completa
-    casaBase.position.set(-10,0,2);
     grupoCasa.position.set(6, 5, 9);
     this.escena.add(grupoCasa);
     this.objetos.visibles.push(grupoCasa);
@@ -490,7 +484,7 @@ class EscenaSimpson {
     
     // Elegir un tipo de movimiento de cámara (descomentar uno para activarlo)
     // this.actualizarRutaCamara();
-    this.actualizarCamaraCircular(); // Activando movimiento circular por defecto
+    // this.actualizarCamaraCircular(); // Activando movimiento circular por defecto
     
     // Optimización: solo actualizar los controles si se están usando
     if (this.controles.enabled) {
@@ -508,5 +502,4 @@ class EscenaSimpson {
 // Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
   const patioSimpson = new EscenaSimpson();
-});</parameter>
-</invoke>
+});
