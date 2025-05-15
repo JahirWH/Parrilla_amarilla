@@ -227,7 +227,7 @@ class EscenaSimpson {
     grupoCasa.add(casaBase);
 
     // Techo de la casa
-    const geometriaTechomini = this.obtenerGeometria('techo', () => new THREE.ConeGeometry(7.9, 4, 3));
+    const geometriaTechomini = this.obtenerGeometria('techomini', () => new THREE.ConeGeometry(11.9, 5, 4));
 
     const geometriaTecho = this.obtenerGeometria('techo', () => new THREE.ConeGeometry(11.9, 5, 4));
     const materialTecho = this.obtenerMaterial('techo', () => 
@@ -251,7 +251,7 @@ class EscenaSimpson {
     this.anadirPuerta(grupoCasa);
 
     // Posicionar la casa completa
-    grupoCasa.position.set(6, 5, 9);
+    grupoCasa.position.set(8, 5, 9);
     this.escena.add(grupoCasa);
     this.objetos.visibles.push(grupoCasa);
   }
@@ -290,8 +290,9 @@ class EscenaSimpson {
 
   crearArboles() {
     // Posiciones para varios árboles
+    const posicionArbolGrande = [{ x:8, y: 0, z: 0 }]
+
     const posicionesArboles = [
-      { x: 20, y: 0, z: 0 },
       { x: -21, y: 0, z: 7 },
       { x: -20, y: 0, z: -7 }
     ];
@@ -299,7 +300,46 @@ class EscenaSimpson {
     posicionesArboles.forEach(pos => {
       this.crearArbol(pos.x, pos.y, pos.z);
     });
+
+
+    posicionArbolGrande.forEach(pos => {
+      this.casadelarbol(pos.x, pos.y, pos.z);
+    })
   }
+// Casa del arbol principal 
+  casadelarbol(x,y,z){
+     // Grupo para el árbol completo
+    // const grupoArbol = new THREE.Group();
+    const casadelarbol = new THREE.Group();
+    
+    // Tronco 
+    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(2, 2, 15, 10));
+    const materialTronco = this.obtenerMaterial('palo', () => 
+      new THREE.MeshLambertMaterial({ color: this.colores.tronco })
+    );
+    
+    const tronco = new THREE.Mesh(geometriaTronco, materialTronco);
+    tronco.position.y = 2;
+    // tronco.castShadow = true;
+    casadelarbol.add(tronco);
+    
+    // Hojas
+    const geometriaHojas = this.obtenerGeometria('hojas', () => new THREE.SphereGeometry(13, 26, 26));
+    const materialHojas = this.obtenerMaterial('hojas', () => 
+      new THREE.MeshLambertMaterial({ color: this.colores.hojas })
+    );
+    
+    const hojas = new THREE.Mesh(geometriaHojas, materialHojas);
+    hojas.position.y = 5;
+    hojas.castShadow = true;
+    casadelarbol.add(hojas);
+    
+    // Posicionar el árbol completo
+    casadelarbol.position.set(x, y, z);
+    this.escena.add(casadelarbol);
+    this.objetos.visibles.push(casadelarbol);
+  }
+
 
   crearArbol(x, y, z) {
     // Grupo para el árbol completo
