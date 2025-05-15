@@ -227,7 +227,7 @@ class EscenaSimpson {
     grupoCasa.add(casaBase);
 
     // Techo de la casa
-    const geometriaTechomini = this.obtenerGeometria('techomini', () => new THREE.ConeGeometry(11.9, 5, 4));
+    const geometriaTechomini = this.obtenerGeometria('techomini', () => new THREE.ConeGeometry(8, 3, 4));
 
     const geometriaTecho = this.obtenerGeometria('techo', () => new THREE.ConeGeometry(11.9, 5, 4));
     const materialTecho = this.obtenerMaterial('techo', () => 
@@ -238,7 +238,8 @@ class EscenaSimpson {
     const techo = new THREE.Mesh(geometriaTecho, materialTecho);
     techo.position.y = 7.5; // Ajustado para situar correctamente sobre la casa
     techo.rotation.y = Math.PI / 4;
-    techomini.position.y = 8.5;
+    techomini.position.y = 6.5;
+    techomini.position.x = -11;
     techomini.rotation.y = Math.PI / 4;
     techo.castShadow = true;
     techomini.castShadow = true;
@@ -273,6 +274,13 @@ class EscenaSimpson {
     const ventanaLateral = new THREE.Mesh(geometriaVentanaLateral, materialVentana);
     ventanaLateral.position.set(7.51, 1, 0); // Ajustado para estar en la superficie
     grupoCasa.add(ventanaLateral);
+
+    // Ventana trasera atras del arbol 1
+    const geometriaVentanatrasera = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(5, 5, 0.1));
+    const ventanatrasera = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
+    ventanatrasera.position.set(0, 1, -5.01); // Ajustado para estar en la superficie
+    grupoCasa.add(ventanatrasera);
+   
   }
 
   anadirPuerta(grupoCasa) {
@@ -290,7 +298,7 @@ class EscenaSimpson {
 
   crearArboles() {
     // Posiciones para varios árboles
-    const posicionArbolGrande = [{ x:8, y: 0, z: 0 }]
+    const posicionArbolGrande = [{ x:11, y: 4, z: -6 }]
 
     const posicionesArboles = [
       { x: -21, y: 0, z: 7 },
@@ -313,7 +321,7 @@ class EscenaSimpson {
     const casadelarbol = new THREE.Group();
     
     // Tronco 
-    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(2, 2, 15, 10));
+    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(1.5, 2, 11, 10));
     const materialTronco = this.obtenerMaterial('palo', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.tronco })
     );
@@ -324,8 +332,8 @@ class EscenaSimpson {
     casadelarbol.add(tronco);
     
     // Hojas
-    const geometriaHojas = this.obtenerGeometria('hojas', () => new THREE.SphereGeometry(13, 26, 26));
-    const materialHojas = this.obtenerMaterial('hojas', () => 
+    const geometriaHojas = this.obtenerGeometria('hojas_g', () => new THREE.SphereGeometry(4, 8, 21));
+    const materialHojas = this.obtenerMaterial('hojas_g', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.hojas })
     );
     
