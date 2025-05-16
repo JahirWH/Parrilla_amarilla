@@ -381,6 +381,178 @@ class EscenaSimpson {
     this.objetos.visibles.push(grupoArbol);
   }
 
+  crearCasaArbol() {
+  // Grupo para la casa del árbol
+  const grupoCasaArbol = new THREE.Group();
+  
+  // Base (plataforma) de la casa
+  const geometriaBase = this.obtenerGeometria('base_casa_arbol', () => new THREE.BoxGeometry(6, 0.5, 5));
+  const materialMadera = this.obtenerMaterial('madera_casa_arbol', () => 
+    new THREE.MeshLambertMaterial({ color: 0x8B4513 }) // Marrón madera
+  );
+  
+  const base = new THREE.Mesh(geometriaBase, materialMadera);
+  base.castShadow = true;
+  grupoCasaArbol.add(base);
+  
+  // Paredes de la casa
+  const geometriaParedes = this.obtenerGeometria('paredes_casa_arbol', () => new THREE.BoxGeometry(5, 3, 4));
+  const materialParedes = this.obtenerMaterial('paredes_casa_arbol', () => 
+    new THREE.MeshLambertMaterial({ color: 0xCD853F }) // Marrón claro
+  );
+  
+  const paredes = new THREE.Mesh(geometriaParedes, materialParedes);
+  paredes.position.y = 1.75; // Mitad de la altura
+  paredes.castShadow = true;
+  grupoCasaArbol.add(paredes);
+  
+  // Techo de la casa
+  const geometriaTecho = this.obtenerGeometria('techo_casa_arbol', () => new THREE.ConeGeometry(3.8, 2, 4));
+  const materialTecho = this.obtenerMaterial('techo_casa_arbol', () => 
+    new THREE.MeshLambertMaterial({ color: 0x8B0000 }) // Rojo oscuro
+  );
+  
+  const techo = new THREE.Mesh(geometriaTecho, materialTecho);
+  techo.position.y = 4.25; // Encima de las paredes
+  techo.rotation.y = Math.PI / 4; // Girar 45 grados
+  techo.castShadow = true;
+  grupoCasaArbol.add(techo);
+  
+  // Ventana frontal
+  const geometriaVentana = this.obtenerGeometria('ventana_casa_arbol', () => new THREE.BoxGeometry(1.5, 1.2, 0.1));
+  const materialVentana = this.obtenerMaterial('ventana_casa_arbol', () => 
+    new THREE.MeshLambertMaterial({ color: 0x87CEEB }) // Azul cielo
+  );
+  
+  const ventana = new THREE.Mesh(geometriaVentana, materialVentana);
+  ventana.position.set(0, 1.8, 2.01); // Frente de la casa
+  grupoCasaArbol.add(ventana);
+  
+  // Puerta
+  const geometriaPuerta = this.obtenerGeometria('puerta_casa_arbol', () => new THREE.BoxGeometry(1.2, 2, 0.1));
+  const materialPuerta = this.obtenerMaterial('puerta_casa_arbol', () => 
+    new THREE.MeshLambertMaterial({ color: 0x654321 }) // Marrón oscuro
+  );
+  
+  const puerta = new THREE.Mesh(geometriaPuerta, materialPuerta);
+  puerta.position.set(-1.5, 1.25, 2.01); // Frente de la casa
+  grupoCasaArbol.add(puerta);
+  
+  // Escalera
+  this.crearEscaleraCasaArbol(grupoCasaArbol);
+  
+  // Posicionar la casa completa en lo alto del árbol grande
+  // Ajusta estas coordenadas para que coincidan con la parte superior del árbol grande
+  grupoCasaArbol.position.set(11, 11, -6);
+  
+  this.escena.add(grupoCasaArbol);
+  this.objetos.visibles.push(grupoCasaArbol);
+}
+
+crearEscaleraCasaArbol(grupoCasaArbol) {
+  const materialMadera = this.obtenerMaterial('madera_escalera', () => 
+    new THREE.MeshLambertMaterial({ color: 0x8B4513 })
+  );
+  
+  // Crear los peldaños de la escalera
+  for (let i = 0; i < 5; i++) {
+    const geometriaPeldano = this.obtenerGeometria('peldano_escalera', () => new THREE.BoxGeometry(1.5, 0.2, 0.4));
+    const peldano = new THREE.Mesh(geometriaPeldano, materialMadera);
+    
+    // Posicionar cada peldaño en diagonal
+    peldano.position.set(2 + i*0.3, -1 + i*0.5, 1.5 - i*0.3);
+    peldano.rotation.z = Math.PI / 8; // Inclinación
+    peldano.castShadow = true;
+    
+    grupoCasaArbol.add(peldano);
+  }
+  
+  // Añadir pasamanos
+  const geometriaPasamanos = this.obtenerGeometria('pasamanos_escalera', () => new THREE.BoxGeometry(0.2, 3.5, 0.2));
+  const pasamanos = new THREE.Mesh(geometriaPasamanos, materialMadera);
+  
+  pasamanos.position.set(3.5, 0.5, 0.5);
+  pasamanos.rotation.z = Math.PI / 8; // Misma inclinación que los peldaños
+  pasamanos.castShadow = true;
+  
+  grupoCasaArbol.add(pasamanos);
+}
+
+crearBoteBasura() {
+  // Grupo para el bote completo
+  const grupoBote = new THREE.Group();
+  
+  // Cuerpo del bote
+  const geometriaBote = this.obtenerGeometria('bote_basura', () => new THREE.CylinderGeometry(0.8, 0.6, 2, 12));
+  const materialBote = this.obtenerMaterial('bote_basura', () => 
+    new THREE.MeshLambertMaterial({ color: 0x808080 }) // Gris metálico
+  );
+  
+  const bote = new THREE.Mesh(geometriaBote, materialBote);
+  bote.position.y = 1; // Mitad de su altura
+  bote.castShadow = true;
+  grupoBote.add(bote);
+  
+  // Tapa del bote
+  const geometriaTapa = this.obtenerGeometria('tapa_bote', () => new THREE.CylinderGeometry(0.85, 0.8, 0.2, 12));
+  const materialTapa = this.obtenerMaterial('tapa_bote', () => 
+    new THREE.MeshLambertMaterial({ color: 0x696969 }) // Gris oscuro
+  );
+  
+  const tapa = new THREE.Mesh(geometriaTapa, materialTapa);
+  tapa.position.y = 2.1; // Encima del bote
+  tapa.castShadow = true;
+  grupoBote.add(tapa);
+  
+  // Posicionar el bote completo
+  grupoBote.position.set(-12, 0, 12); // Posición en el patio
+  this.escena.add(grupoBote);
+  this.objetos.visibles.push(grupoBote);
+}
+
+crearBuzon() {
+  // Grupo para el buzón completo
+  const grupoBuzon = new THREE.Group();
+  
+  // Poste del buzón
+  const geometriaPoste = this.obtenerGeometria('poste_buzon', () => new THREE.BoxGeometry(0.5, 3, 0.5));
+  const materialPoste = this.obtenerMaterial('poste_buzon', () => 
+    new THREE.MeshLambertMaterial({ color: 0x8B4513 })
+  );
+  
+  const poste = new THREE.Mesh(geometriaPoste, materialPoste);
+  poste.position.y = 1.5; // Mitad de su altura
+  poste.castShadow = true;
+  grupoBuzon.add(poste);
+  
+  // Caja del buzón
+  const geometriaCaja = this.obtenerGeometria('caja_buzon', () => new THREE.BoxGeometry(1.2, 0.8, 1.5));
+  const materialCaja = this.obtenerMaterial('caja_buzon', () => 
+    new THREE.MeshLambertMaterial({ color: 0x1E90FF }) // Azul al estilo Simpson
+  );
+  
+  const caja = new THREE.Mesh(geometriaCaja, materialCaja);
+  caja.position.y = 3; // Arriba del poste
+  caja.castShadow = true;
+  grupoBuzon.add(caja);
+  
+  // Bandera del buzón
+  const geometriaBandera = this.obtenerGeometria('bandera_buzon', () => new THREE.BoxGeometry(0.1, 0.6, 0.1));
+  const materialBandera = this.obtenerMaterial('bandera_buzon', () => 
+    new THREE.MeshLambertMaterial({ color: 0xFF0000 }) // Rojo
+  );
+  
+  const bandera = new THREE.Mesh(geometriaBandera, materialBandera);
+  bandera.position.set(0.7, 3.2, 0.5); // Al lado derecho del buzón
+  bandera.castShadow = true;
+  grupoBuzon.add(bandera);
+  
+  // Posicionar el buzón completo
+  grupoBuzon.position.set(20, 0, 12); // Posición cerca de la cerca
+  this.escena.add(grupoBuzon);
+  this.objetos.visibles.push(grupoBuzon);
+}
+
   crearNubes() {
     // Varias nubes en diferentes posiciones
     const posicionesNubes = [
@@ -425,10 +597,14 @@ class EscenaSimpson {
     this.objetos.fondo.push(grupoNube);
   }
 
+  // cosas mas pequenas 
   crearDecoraciones() {
-    // Implementación futura para añadir elementos decorativos
-    // como buzón, garaje, etc.
-  }
+  this.crearBuzon();
+  this.crearBoteBasura();
+  this.crearCasaArbol();
+}
+
+
 
   configurarEventListeners() {
     window.addEventListener('resize', this.alRedimensionarVentana.bind(this));

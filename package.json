@@ -1,7 +1,7 @@
 {
   "name": "parrilla_amarilla",
   "version": "1.0.0",
-  "description": "",
+  "description": "# Descricion - Parrilla amarilla es un modelo web en 3d sobre el patio de la iconia serie the simson  donde las animaciones y el manejo de objetos en 3d estan muy presentes",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
