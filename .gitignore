@@ -2,7 +2,6 @@
 /node_modules
 /.pnp
 .pnp.js
-/node_modules
 
 # Archivos de entorno
 .env
@@ -13,11 +12,9 @@
 
 # Build
 /build
-/inspiraciones
 /dist
 /.next
 /out
-
 
 # Cache
 .npm
@@ -31,4 +28,21 @@
 *.ntvs*
 *.njsproj
 *.sln
+
+# Archivos de sistema y temporales
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.bak
+
+# Archivos de pruebas
+coverage/
+
+# Archivos de configuración de Linux/macOS
+*~
+
+# Archivos de configuración de Windows
+$RECYCLE.BIN/
 

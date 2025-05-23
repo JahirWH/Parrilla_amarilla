@@ -321,32 +321,45 @@ class EscenaSimpson {
     const casadelarbol = new THREE.Group();
     
     // Tronco 
-    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(1.5, 2, 16, 16));
+    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(1.5, 2, 11, 13));
     const materialTronco = this.obtenerMaterial('palo', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.tronco })
     );
     
     const tronco = new THREE.Mesh(geometriaTronco, materialTronco);
-    tronco.position.y = 2;
+    tronco.position.y = 0;
+    tronco.position.z = -2;
     // tronco.castShadow = true;
     casadelarbol.add(tronco);
     
     // Hojas
-    const geometriaHojas = this.obtenerGeometria('hojas_g', () => new THREE.SphereGeometry(4, 8,8));
+    const geometriaHojas = this.obtenerGeometria('hojas_g', () => new THREE.SphereGeometry(4, 17,17));
     const materialHojas = this.obtenerMaterial('hojas_g', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.hojas })
     );
+
+      // Hojas mas pquenas
+     const geometriaHojaspequenas = this.obtenerGeometria('ho', () => new THREE.SphereGeometry(2, 13,13));
+
+    const minihoja = new THREE.Mesh(geometriaHojaspequenas,materialHojas);
+    minihoja.position.y = 1;
+    minihoja.position.x = -4;
+    minihoja.position.z = -2;
+    casadelarbol.add(minihoja)
     
     // hoas mas peuenas
+    // No puedo escribir la j en la pc de escritorio
 
     const hoa1 = new THREE.Mesh(geometriaHojas, materialHojas);
     hoa1.position.y = 5;
     hoa1.position.x = 3;
+    hoa1.position.z = -3;
     casadelarbol.add(hoa1)
 
     const hoa2 = new THREE.Mesh(geometriaHojas, materialHojas);
     hoa2.position.y = 5;
-    hoa2.position.x = -3;
+    hoa2.position.x = -5;
+    hoa2.position.z = -5;
     casadelarbol.add(hoa2)
 
     const hojas = new THREE.Mesh(geometriaHojas, materialHojas);
@@ -455,7 +468,7 @@ class EscenaSimpson {
   
   // Posicionar la casa completa en lo alto del árbol grande
   // Ajusta estas coordenadas para que coincidan con la parte superior del árbol grande
-  grupoCasaArbol.position.set(11, 11, -6);
+  grupoCasaArbol.position.set(10,11, -8);
   
   this.escena.add(grupoCasaArbol);
   this.objetos.visibles.push(grupoCasaArbol);
@@ -475,6 +488,7 @@ crearEscaleraCasaArbol(grupoCasaArbol) {
     peldano.position.set(2 + i*0.3, -1 + i*0.5, 1.5 - i*0.3);
     peldano.rotation.z = Math.PI / 8; // Inclinación
     peldano.castShadow = true;
+    peldano.position.x = -3.5;
     
     grupoCasaArbol.add(peldano);
   }
@@ -483,9 +497,10 @@ crearEscaleraCasaArbol(grupoCasaArbol) {
   const geometriaPasamanos = this.obtenerGeometria('pasamanos_escalera', () => new THREE.BoxGeometry(0.2, 3.5, 0.2));
   const pasamanos = new THREE.Mesh(geometriaPasamanos, materialMadera);
   
-  pasamanos.position.set(3.5, 0.5, 0.5);
-  pasamanos.rotation.z = Math.PI / 8; // Misma inclinación que los peldaños
+  pasamanos.position.set(4, 0.5, 0.5);
+  pasamanos.rotation.z = Math.PI / 1; // Misma inclinación que los peldaños
   pasamanos.castShadow = true;
+  pasamanos.position.x = -4;
   
   grupoCasaArbol.add(pasamanos);
 }
@@ -560,7 +575,7 @@ crearBuzon() {
   grupoBuzon.add(bandera);
   
   // Posicionar el buzón completo
-  grupoBuzon.position.set(20, 0, 12); // Posición cerca de la cerca
+  grupoBuzon.position.set(17, 0, 12); // Posición cerca de la cerca
   this.escena.add(grupoBuzon);
   this.objetos.visibles.push(grupoBuzon);
 }
@@ -568,9 +583,9 @@ crearBuzon() {
   crearNubes() {
     // Varias nubes en diferentes posiciones
     const posicionesNubes = [
-      { x: 5, y: 12, z: -10 },
-      { x: -10, y: 15, z: -12 },
-      { x: 15, y: 11, z: -8 }
+      { x: 0, y: 17, z: 4 },//la de enmedio
+      { x: -15, y: 15, z: -6 },//la de la otra esquina primera
+      { x: 19, y: 15, z: -8 } //lade la esquina cerca del arbol
     ];
     
     posicionesNubes.forEach(pos => {
