@@ -321,7 +321,7 @@ class EscenaSimpson {
     const casadelarbol = new THREE.Group();
     
     // Tronco 
-    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(1.5, 2, 11, 10));
+    const geometriaTronco = this.obtenerGeometria('palo', () => new THREE.CylinderGeometry(1.5, 2, 16, 16));
     const materialTronco = this.obtenerMaterial('palo', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.tronco })
     );
@@ -332,13 +332,25 @@ class EscenaSimpson {
     casadelarbol.add(tronco);
     
     // Hojas
-    const geometriaHojas = this.obtenerGeometria('hojas_g', () => new THREE.SphereGeometry(4, 8, 21));
+    const geometriaHojas = this.obtenerGeometria('hojas_g', () => new THREE.SphereGeometry(4, 8,8));
     const materialHojas = this.obtenerMaterial('hojas_g', () => 
       new THREE.MeshLambertMaterial({ color: this.colores.hojas })
     );
     
+    // hoas mas peuenas
+
+    const hoa1 = new THREE.Mesh(geometriaHojas, materialHojas);
+    hoa1.position.y = 5;
+    hoa1.position.x = 3;
+    casadelarbol.add(hoa1)
+
+    const hoa2 = new THREE.Mesh(geometriaHojas, materialHojas);
+    hoa2.position.y = 5;
+    hoa2.position.x = -3;
+    casadelarbol.add(hoa2)
+
     const hojas = new THREE.Mesh(geometriaHojas, materialHojas);
-    hojas.position.y = 5;
+    hojas.position.y = 3.7;
     hojas.castShadow = true;
     casadelarbol.add(hojas);
     
@@ -396,7 +408,7 @@ class EscenaSimpson {
   grupoCasaArbol.add(base);
   
   // Paredes de la casa
-  const geometriaParedes = this.obtenerGeometria('paredes_casa_arbol', () => new THREE.BoxGeometry(5, 3, 4));
+  const geometriaParedes = this.obtenerGeometria('paredes_casa_arbol', () => new THREE.BoxGeometry(5, 3,  4));
   const materialParedes = this.obtenerMaterial('paredes_casa_arbol', () => 
     new THREE.MeshLambertMaterial({ color: 0xCD853F }) // Marrón claro
   );
