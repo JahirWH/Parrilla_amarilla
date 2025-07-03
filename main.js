@@ -276,10 +276,17 @@ class EscenaSimpson {
     grupoCasa.add(ventanaLateral);
 
     // Ventana trasera atras del arbol 1
-    const geometriaVentanatrasera = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(5, 5, 0.1));
+    const geometriaVentanatrasera = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(3, 3, 0.1));
     const ventanatrasera = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
-    ventanatrasera.position.set(0, 1, -5.01); // Ajustado para estar en la superficie
+    ventanatrasera.position.set(4, 2, -5.01); // Ajustado para estar en la superficie
     grupoCasa.add(ventanatrasera);
+
+    //ventana trasera 2
+    const geometriaVentanatrasera2 = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(3, 3, 0.1));
+    const ventanatrasera2 = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
+    ventanatrasera2.position.set(-3, 2, -5.01); // Ajustado para estar en la superficie
+    grupoCasa.add(ventanatrasera2);
+
    
   }
 
