@@ -278,16 +278,39 @@ class EscenaSimpson {
     // Ventana trasera atras del arbol 1
     const geometriaVentanatrasera = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(3, 3, 0.1));
     const ventanatrasera = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
-    ventanatrasera.position.set(4, 2, -5.01); // Ajustado para estar en la superficie
+    ventanatrasera.position.set(4, 2.5, -5.01); // Ajustado para estar en la superficie
     grupoCasa.add(ventanatrasera);
 
     //ventana trasera 2
     const geometriaVentanatrasera2 = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(3, 3, 0.1));
     const ventanatrasera2 = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
-    ventanatrasera2.position.set(-3, 2, -5.01); // Ajustado para estar en la superficie
+    ventanatrasera2.position.set(-3, 2.5, -5.01); // Ajustado para estar en la superficie
     grupoCasa.add(ventanatrasera2);
 
+    const geometriaVentanatrasera3 = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(3, 3, 0.1));
+    const ventanatrasera3 = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
+    ventanatrasera3.position.set(-3, -2, -5.01); // ventaba abajo 1
+    grupoCasa.add(ventanatrasera3);
+
+    const geometriaVentanatrasera4 = this.obtenerGeometria('ventanatrasera', () => new THREE.BoxGeometry(3, 3, 0.1));
+    const ventanatrasera4 = new THREE.Mesh(geometriaVentanatrasera, materialVentana);
+    ventanatrasera4.position.set(4, -2, -5.01); // ventaba abajo 2
+    grupoCasa.add(ventanatrasera4);
+
    
+  }
+  
+  agregarVentanas(casaBase){
+    const materialVentana1 = this.obtenerMaterial('ventana', () => 
+      new THREE.MeshLambertMaterial({ color: 0x87CEEB })
+    );
+
+    const geometriaVentana1 = this.obtenerGeometria('ventanaCasaBase', () => new THREE.BoxGeometry(4, 4, 0.1));
+    const ventana1 = new THREE.Mesh(geometriaVentana1, materialVentana1);
+    ventana1.position.set(-3, -2, -5.01); 
+    casaBase.add(ventana1);
+
+
   }
 
   anadirPuerta(grupoCasa) {
