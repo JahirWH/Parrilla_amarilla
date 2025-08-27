@@ -304,18 +304,39 @@ class EscenaSimpson {
 
    
   }
+
+  // La puerta es con arco redondeado
+  // pendiente de colocar
   
   agregarVentanas(casaBase){
-    const materialVentana1 = this.obtenerMaterial('ventana', () => 
-      new THREE.MeshLambertMaterial({ color: 0x87CEEB })
+    // Ventana (puerta) con marco redondeado
+    const materialPuerta = this.obtenerMaterial('puertaRedonda', () => 
+      new THREE.MeshLambertMaterial({ color: 0x8B4513 })
+    );
+    const materialMarco = this.obtenerMaterial('marcoPuerta', () => 
+      new THREE.MeshLambertMaterial({ color: 0x8B4513 })
     );
 
-    const geometriaVentana1 = this.obtenerGeometria('ventanaCasaBase', () => new THREE.BoxGeometry(4, 4, 0.1));
-    const ventana1 = new THREE.Mesh(geometriaVentana1, materialVentana1);
-    ventana1.position.set(-1, -1, -3.01); 
-    casaBase.add(ventana1);
+    // Parte rectangular inferior de la puerta
+    const geometriaPuertaRect = this.obtenerGeometria('puertaRect', () => new THREE.BoxGeometry(2, 3, 0.1));
+    const puertaRect = new THREE.Mesh(geometriaPuertaRect, materialPuerta);
+    puertaRect.position.set(-1, -4, -3.01);
 
+    // Parte superior redondeada (arco semicircular)
+    const geometriaArco = this.obtenerGeometria('puertaArco', () => new THREE.CylinderGeometry(1, 1, 0.1, 32, 1, false, Math.PI, Math.PI));
+    const arco = new THREE.Mesh(geometriaArco, materialPuerta);
+    arco.position.set(-1, -2.5, -3.01);
+    arco.rotation.z = Math.PI / 2;
 
+    // Marco del arco (opcional, para resaltar el borde)
+    const geometriaMarco = this.obtenerGeometria('marcoArco', () => new THREE.CylinderGeometry(2.05, 1.05, 1.12, 32, 1, false, Math.PI, Math.PI));
+    const marco = new THREE.Mesh(geometriaMarco, materialMarco);
+    marco.position.set(-1, -2.5, -4.015);
+    marco.rotation.z = Math.PI / 2;
+
+    casaBase.add(puertaRect);
+    casaBase.add(arco);
+    casaBase.add(marco);
   }
 
   anadirPuerta(grupoCasa) {
