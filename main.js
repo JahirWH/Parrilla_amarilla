@@ -329,14 +329,14 @@ class EscenaSimpson {
     arco.rotation.z = Math.PI / 2;
 
     // Marco del arco (opcional, para resaltar el borde)
-    const geometriaMarco = this.obtenerGeometria('marcoArco', () => new THREE.CylinderGeometry(2.05, 1.05, 1.12, 32, 1, false, Math.PI, Math.PI));
-    const marco = new THREE.Mesh(geometriaMarco, materialMarco);
-    marco.position.set(-1, -2.5, -4.015);
-    marco.rotation.z = Math.PI / 2;
+    // const geometriaMarco = this.obtenerGeometria('marcoArco', () => new THREE.CylinderGeometry(2.05, 1.05, 1.12, 32, 1, false, Math.PI, Math.PI));
+    // const marco = new THREE.Mesh(geometriaMarco, materialMarco);
+    // marco.position.set(-1, -2.5, -4.015);
+    // marco.rotation.z = Math.PI / 2;
 
     casaBase.add(puertaRect);
     casaBase.add(arco);
-    casaBase.add(marco);
+    // casaBase.add(marco);
   }
 
   anadirPuerta(grupoCasa) {
