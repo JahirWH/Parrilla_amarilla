@@ -29,7 +29,7 @@
   "devDependencies": {
     "vite": "^5.2.10"
   },
-  "engines": {
-    "node": ">=18.x"
-  }
+ "engines": {
+  "node": "20.x"
+}
 }
