@@ -60,6 +60,7 @@ class EscenaSimpson {
     this.crearArboles();
     this.crearDecoraciones();
     this.configurarEventListeners();
+    this.crearHomero();
     this.animar();
   }
 
@@ -323,10 +324,10 @@ class EscenaSimpson {
     puertaRect.position.set(-1, -4, -3.01);
 
     // Parte superior redondeada (arco semicircular)
-    const geometriaArco = this.obtenerGeometria('puertaArco', () => new THREE.CylinderGeometry(1, 1, 0.1, 32, 1, false, Math.PI, Math.PI));
+    const geometriaArco = this.obtenerGeometria('puertaArco', () => new THREE.CylinderGeometry(1, 1, 0.1, 12, 2, false, 0, Math.PI));
     const arco = new THREE.Mesh(geometriaArco, materialPuerta);
-    arco.position.set(-1, -2.5, -3.01);
-    arco.rotation.z = Math.PI / 2;
+    arco.position.set(-1, -0.5, -3); // Ajusta la altura para que el arco quede sobre la puerta
+    arco.rotation.x = Math.PI / 2; // Rota para que el arco mire hacia el frente
 
     // Marco del arco (opcional, para resaltar el borde)
     // const geometriaMarco = this.obtenerGeometria('marcoArco', () => new THREE.CylinderGeometry(2.05, 1.05, 1.12, 32, 1, false, Math.PI, Math.PI));
@@ -809,6 +810,66 @@ crearBuzon() {
     
     // Renderizar la escena
     this.renderizador.render(this.escena, this.camara);
+  }
+  crearHomero() {
+    // Grupo principal de Homero
+    const homero = new THREE.Group();
+
+    // Materiales
+    const materialPiel = new THREE.MeshLambertMaterial({ color: 0xffe066 }); // Amarillo Simpson
+    const materialRopa = new THREE.MeshLambertMaterial({ color: 0xffffff }); // Camisa blanca
+    const materialPantalon = new THREE.MeshLambertMaterial({ color: 0x1a237e }); // Azul pantalón
+    const materialZapato = new THREE.MeshLambertMaterial({ color: 0x333333 }); // Negro zapatos
+
+    // Cuerpo (esfera grande)
+    const geometriaCuerpo = new THREE.SphereGeometry(1.2, 16, 16);
+    const cuerpo = new THREE.Mesh(geometriaCuerpo, materialRopa);
+    cuerpo.position.y = 2;
+    homero.add(cuerpo);
+
+    // Cabeza (esfera más pequeña)
+    const geometriaCabeza = new THREE.SphereGeometry(0.8, 16, 16);
+    const cabeza = new THREE.Mesh(geometriaCabeza, materialPiel);
+    cabeza.position.y = 3.3;
+    homero.add(cabeza);
+
+    // Manos (esferas pequeñas)
+    const geometriaMano = new THREE.SphereGeometry(0.3, 12, 12);
+    const manoIzq = new THREE.Mesh(geometriaMano, materialPiel);
+    manoIzq.position.set(-1.1, 2, 0);
+    homero.add(manoIzq);
+
+    const manoDer = new THREE.Mesh(geometriaMano, materialPiel);
+    manoDer.position.set(1.1, 2, 0);
+    homero.add(manoDer);
+
+    // Piernas (cilindros)
+    const geometriaPierna = new THREE.CylinderGeometry(0.22, 0.22, 1, 12);
+    const piernaIzq = new THREE.Mesh(geometriaPierna, materialPantalon);
+    piernaIzq.position.set(-0.4, 1, 0);
+    homero.add(piernaIzq);
+
+    const piernaDer = new THREE.Mesh(geometriaPierna, materialPantalon);
+    piernaDer.position.set(0.4, 1, 0);
+    homero.add(piernaDer);
+
+    // Pies (esferas achatadas)
+    const geometriaPie = new THREE.SphereGeometry(0.28, 12, 12);
+    const pieIzq = new THREE.Mesh(geometriaPie, materialZapato);
+    pieIzq.position.set(-0.4, 0.5, 0.18);
+    pieIzq.scale.set(1.2, 0.6, 1.5);
+    homero.add(pieIzq);
+
+    const pieDer = new THREE.Mesh(geometriaPie, materialZapato);
+    pieDer.position.set(0.4, 0.5, 0.18);
+    pieDer.scale.set(1.2, 0.6, 1.5);
+    homero.add(pieDer);
+
+    // Posicionar Homero en el patio
+    homero.position.set(1, 0, -3);
+    homero.castShadow = true;
+    this.escena.add(homero);
+    this.objetos.visibles.push(homero);
   }
 }
 
