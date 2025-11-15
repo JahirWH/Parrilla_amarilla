@@ -46,6 +46,12 @@ class EscenaSimpson {
       nube: 0xFFFFFF
     };
     
+    // Animación de personaje
+    this.animState = 'idle'; // 'idle' | 'walk'
+    this.animProgress = 0; // progreso de la animación
+    this.animSpeed = 6.0; // velocidad base de la animación (ajustable)
+    this.lastTime = performance.now();
+
     // Inicializar componentes
     this.inicializar();
   }
@@ -795,20 +801,29 @@ crearBuzon() {
   }
 
   animar() {
+    // requestAnimationFrame pasa un timestamp; lo usamos para delta time
     requestAnimationFrame(this.animar.bind(this));
-    
+
     // Elegir un tipo de movimiento de cámara (descomentar uno para activarlo)
     // this.actualizarRutaCamara();
     // this.actualizarCamaraCircular(); // Activando movimiento circular por defecto
-    
+
+    // Calcular delta time
+    const now = performance.now();
+    const delta = (now - this.lastTime) / 1000; // segundos
+    this.lastTime = now;
+
+    // Actualizar animaciones del personaje
+    this.updateAnimaciones(delta);
+
     // Optimización: solo actualizar los controles si se están usando
-    if (this.controles.enabled) {
+    if (this.controles && this.controles.enabled) {
       this.controles.update();
     }
-    
+
     // Optimización: actualizar qué objetos son visibles y cuáles no
     this.actualizarVisibilidad();
-    
+
     // Renderizar la escena
     this.renderizador.render(this.escena, this.camara);
   }
@@ -845,27 +860,62 @@ crearBuzon() {
       manoDer.position.set(1.1, 2, 0);
       homero.add(manoDer);
 
-      // Piernas (cilindros)
+      // Piernas (cilindros) - las colocamos dentro de un pivot para animar el levantamiento
       const geometriaPierna = new THREE.CylinderGeometry(0.22, 0.22, 1, 12);
+
+      // Izquierda: crear un grupo en la cadera (pivot) y añadir la malla desplazada
+      const piernaIzqGroup = new THREE.Group();
+      piernaIzqGroup.position.set(-0.4, 1.5, 0); // pivot en la cadera
       const piernaIzq = new THREE.Mesh(geometriaPierna, materialPantalon);
-      piernaIzq.position.set(-0.4, 1, 0);
-      homero.add(piernaIzq);
+      // desplazar la malla para que la rotación parezca natural (rotar desde la cadera)
+      piernaIzq.position.set(0, -0.5, 0);
+      piernaIzq.castShadow = true;
+      piernaIzqGroup.add(piernaIzq);
+      homero.add(piernaIzqGroup);
 
+      // Derecha
+      const piernaDerGroup = new THREE.Group();
+      piernaDerGroup.position.set(0.4, 1.5, 0);
       const piernaDer = new THREE.Mesh(geometriaPierna, materialPantalon);
-      piernaDer.position.set(0.4, 1, 0);
-      homero.add(piernaDer);
+      piernaDer.position.set(0, -0.5, 0);
+      piernaDer.castShadow = true;
+      piernaDerGroup.add(piernaDer);
+      homero.add(piernaDerGroup);
 
-      // Pies (esferas achatadas)
+      // Pies (esferas achatadas) - con pivotes para animar junto a las piernas
       const geometriaPie = new THREE.SphereGeometry(0.28, 12, 12);
-      const pieIzq = new THREE.Mesh(geometriaPie, materialZapato);
-      pieIzq.position.set(-0.4, 0.5, 0.18);
-      pieIzq.scale.set(1.2, 0.6, 1.5);
-      homero.add(pieIzq);
 
+      // Pie izquierdo: crear un grupo en el tobillo (pivot) y añadir la malla desplazada
+      const pieIzqGroup = new THREE.Group();
+      pieIzqGroup.position.set(-0.4, 0.5, 0.18); // pivot en el tobillo
+      const pieIzq = new THREE.Mesh(geometriaPie, materialZapato);
+      pieIzq.position.set(0, 0, 0); // malla centrada en el pivot
+      pieIzq.castShadow = true;
+      pieIzq.scale.set(1.2, 0.6, 1.5);
+      pieIzqGroup.add(pieIzq);
+      homero.add(pieIzqGroup);
+
+      // Pie derecho: crear un grupo en el tobillo (pivot) y añadir la malla desplazada
+      const pieDerGroup = new THREE.Group();
+      pieDerGroup.position.set(0.4, 0.5, 0.18); // pivot en el tobillo
       const pieDer = new THREE.Mesh(geometriaPie, materialZapato);
-      pieDer.position.set(0.4, 0.5, 0.18);
+      pieDer.position.set(0, 0, 0); // malla centrada en el pivot
+      pieDer.castShadow = true;
       pieDer.scale.set(1.2, 0.6, 1.5);
-      homero.add(pieDer);
+      pieDerGroup.add(pieDer);
+      homero.add(pieDerGroup);
+
+      // Guardar referencias para animación
+      this.homero = homero; // asignar grupo completo
+      this.homeroLegs = {
+        left: piernaIzqGroup,
+        right: piernaDerGroup
+      };
+      
+      this.homeropies = {
+        left: pieIzqGroup,
+        right: pieDerGroup
+      };
 
       // Posicionar Homero en el patio, quieto
       this.homero = homero;
@@ -876,30 +926,92 @@ crearBuzon() {
 
       // hpmerp moviendose con teclas sin animacion
     }
-}
- let patioSimpson = null;
+
+    // Inicia/detiene animaciones simples de Homero
+    reproducirAnimacionHomero(nombre) {
+      const n = (nombre || '').toString().toLowerCase();
+      if (n === 'walk' || n === 'walking') {
+        this.animState = 'walk';
+      } else if (n === 'idle' || n === 'stop') {
+        this.animState = 'idle';
+      }
+    }
+
+    detenerAnimacionHomero() {
+      this.animState = 'idle';
+    }
+
+    // Actualiza animaciones por frame (delta en segundos)
+    updateAnimaciones(delta) {
+      if (!this.homeroLegs || !this.homeropies) return;
+
+      const legs = this.homeroLegs;
+      const pies = this.homeropies;
+
+      if (this.animState === 'walk') {
+        // avanzar el progreso y calcular oscilación
+        this.animProgress += delta * this.animSpeed;
+        const angle = Math.sin(this.animProgress) * 0.6; // valor en radianes para la cadera
+
+        // Alternar piernas (rotación alrededor del eje X)
+        legs.left.rotation.x = angle;
+        legs.right.rotation.x = -angle;
+
+        // Sincronizar pies: rotación pequeña para simular movimiento natural del tobillo
+        // Los pies se doblan un poco en la dirección opuesta para parecer más reales
+        const footAngle = Math.sin(this.animProgress) * 0.3; // amplitud más pequeña
+        pies.left.rotation.x = footAngle;
+        pies.right.rotation.x = -footAngle;
+
+      } else {
+        // suavizar vuelta a posición neutra
+        // desacelerar animProgress y llevar rotaciones a 0
+        this.animProgress = 0;
+        legs.left.rotation.x += (0 - legs.left.rotation.x) * Math.min(1, delta * 6);
+        legs.right.rotation.x += (0 - legs.right.rotation.x) * Math.min(1, delta * 6);
+        
+        // Animar pies de vuelta a posición neutral
+        pies.left.rotation.x += (0 - pies.left.rotation.x) * Math.min(1, delta * 6);
+        pies.right.rotation.x += (0 - pies.right.rotation.x) * Math.min(1, delta * 6);
+      }
+    }
+  }
+
+let patioSimpson = null;
 
 // Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
   patioSimpson = new EscenaSimpson();
 });
 
-
-document.addEventListener("keydown", (event) => {
-    moverHomero(event, patioSimpson);
+// Mover Homero con teclas y activar animación "walk"
+document.addEventListener('keydown', (event) => {
+  moverHomero(event, patioSimpson);
 });
 
-
+// Al soltar teclas de movimiento, volver a idle
+document.addEventListener('keyup', (event) => {
+  if (!patioSimpson) return;
+  const k = (event.key || '').toLowerCase();
+  if (["w","a","s","d","arrowup","arrowdown","arrowleft","arrowright"].includes(k)) {
+    patioSimpson.detenerAnimacionHomero();
+  }
+});
 
 function moverHomero(event, escena) {
-    if (!escena || !escena.homero) return;
+  if (!escena || !escena.homero) return;
 
-    const homero = escena.homero;
-    const tecla = event.key.toLowerCase();
-    const velocidad = 1;
+  const homero = escena.homero;
+  const tecla = (event.key || '').toLowerCase();
+  const velocidad = 0.2; // ajuste de velocidad más realista
+  let moved = false;
 
-    if (tecla === "w") homero.position.z -= velocidad;
-    if (tecla === "s") homero.position.z += velocidad;
-    if (tecla === "a") homero.position.x -= velocidad;
-    if (tecla === "d") homero.position.x += velocidad;
+  if (tecla === 'w' || tecla === 'arrowup') { homero.position.z -= velocidad; moved = true; }
+  if (tecla === 's' || tecla === 'arrowdown') { homero.position.z += velocidad; moved = true; }
+  if (tecla === 'a' || tecla === 'arrowleft') { homero.position.x -= velocidad; moved = true; }
+  if (tecla === 'd' || tecla === 'arrowright') { homero.position.x += velocidad; moved = true; }
+
+  if (moved) {
+    escena.reproducirAnimacionHomero('walk');
+  }
 }
